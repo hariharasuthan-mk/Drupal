@@ -1,0 +1,80 @@
+<?php
+
+
+function static_temp_menu(){
+
+
+  $items['get_node_by_contenttype_machinename'] = array(
+        'title' => 'Example',
+        'page callback' => 'get_node_details',        
+        'access callback' => TRUE,
+  );
+
+  $items['get_node_by_contenttype_machinename/%'] = array(
+        'title' => 'Menu Example',
+        'page callback' => 'get_node_details',
+        'page arguments' => array(1),
+        'access callback' => TRUE,
+  );
+
+  return $items;
+
+}
+
+
+
+function static_temp_theme($existing, $type, $theme, $path) {
+
+  return array(
+    'custom_output' => array(
+      'variables' => array('node' => $node),
+      'template' => 'node-details-template',
+    ),
+  );
+
+}
+
+function get_node_details($arg0 = NULL) {
+
+  // static $query
+  //$query = db_query("SELECT nid, title FROM {node}");
+
+
+  if (!empty($arg0)) { 
+    $first_arg = $arg0; //'article'
+  }
+  else{ //$output = var_dump($arr).'<div>' . $base_content . t('Default Argument 0=%arg', array('%arg' => 1)) . '</div>';
+    $first_arg = 'page';
+  }
+
+  $query =  db_query("SELECT nid,title FROM {node} WHERE type = :type",
+                      array(':type' => $first_arg,
+                    ));
+
+  //dynamic $query
+  $records = $query->fetchAll();
+  $node = array();
+  foreach ($records as $record) {
+    // Do something.
+    $node = array('title' => $record->title, 'nid' => $record->nid);
+    $node[] = $node;
+  }
+//$output = drupal_json_output($node);
+$output = $node;
+
+return theme('custom_output', array('node' => $output));
+
+}
+
+
+
+function static_temp_help($path, $arg) {
+  switch ($path) {
+
+    // Main module help for the block module
+    case 'admin/help#static_template':
+      return '<p>' . t('access /get_node_by_contenttype_machinename page, it will give the output as default node content type as "page" ') . '</p>';
+
+    
+  }
+}
