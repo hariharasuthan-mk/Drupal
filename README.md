@@ -1,4 +1,5 @@
-# Drupal 7 test/ 
+# Drupal 7 static_temp - menu api for give details of node contnet type  (page, article) 
+http://localhost/get_node_by_contenttype_machinename or http://localhost/get_node_by_contenttype_machinename/page
 
 
 
